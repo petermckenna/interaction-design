@@ -76,7 +76,7 @@ https://github.com/petermckenna/interaction-design
 
 >- Going to R Studio and clicking the **Files** tab on the right panel
 
->- Click the 3 dots **...** below the refresh synbol
+>- Click the 3 dots **...** below the refresh symbol
 
 >- Locate the Zip folder and click **OK**
 
@@ -261,5 +261,49 @@ t_test_data %>%
   ggplot(.) +
   geom_histogram(mapping = aes(x = response_time),
                  bins = 20)
+
+```
+
+# Checking for group (animated, non_animated) differences
+
+
+- A usful way to check the differnce in scores between groups is to generate a boxplot
+- We use the `ggpot2` package to generate graphics
+- For a boxplot, the syntax is geom_boxplot
+- First we'll look at `response_time` then `likert_num`
+
+
+# **Response Time(sec) between groups**
+
+```{r checking group differences in rt with boxplot, echo = T}
+
+t_test_data %>%
+  ggplot(.) +
+  geom_boxplot(mapping = aes(x = animacy, y = response_time, fill = animacy)) + 
+  theme(legend.position = "none")
+
+```
+
+- in a boxplot the bold lines in the box show the median
+- There is a big difference between the medians of the two groups and their response time (sec)
+
+# **Rating of robot's friendliness between groups**
+
+```{r checking group differences in likert with boxplot, echo = T}
+
+# first, make an object (here I've called it 't') that contains the means and sd of likert_num
+
+t <- t_test_data %>%
+  group_by(animacy) %>%                     
+  summarise(avg_rating = mean(likert_num),  
+            sd_rating = sd(likert_num))
+
+# then pass to ggplot2
+
+t %>%
+  ggplot(., aes(animacy, avg_rating, fill = animacy)) +
+  geom_bar(stat="identity") +
+  geom_errorbar(aes(ymin = avg_rating - sd_rating, ymax = avg_rating + sd_rating), width = .2)
+
 
 ```
