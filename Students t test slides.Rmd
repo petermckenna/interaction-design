@@ -307,3 +307,72 @@ t %>%
 
 
 ```
+
+# **Performing a t-test | pt 1 likert data**
+
+>- Now we can check if our groups differ significantly in terms of how friednly they rated the robot (**likert_num**) and their response time (**response_time**)
+>- We'll start with the Likert data
+>- The `t.test` will calculate this difference
+>- To pass data to `t.test` we need to remove `id` and `response_time` vectors to perform grouping, then add `id` again at the end
+
+----
+
+```{r t-test likert data, echo T }
+
+t_test <- t_test_data %>%
+  select(-id, -response_time) %>%  
+  group_by_at(vars(animacy)) %>%
+  mutate(id=1:n()) %>% 
+  ungroup() %>% 
+  spread(key = animacy, value = likert_num) 
+
+```
+
+----
+
+- This new object `t_test` can no be passed to the `t.test` function
+- We use the `$` to specify a vector from the object, in this case, our groups
+
+```{r t-test likert analysis, echo = T}
+
+t.test(t_test$non_animated, t_test$animated)
+
+```
+>- Note: if want paired samples t-test add `paired=FALSE`, e.g. t.test(t_test$non_animated, t_test$animated, paired = FALSE) 
+
+
+# **Interpreting the output**
+
+- Your interested in the 3rd line of output ( the one beginning with *t*)
+- t = -5.6539, df = 56.632, p-value = 5.357e-07
+- So, p < 0.001.
+- Convention holds that this is statisically significant
+- So you can conclude that particpants in the **animated** robot group rated the robot as significantly friendlier (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01), *t* = -5.6539, df = 56.632, *p* < 0.001. 
+
+
+# **Performing a t-test | pt 2 response time data**
+
+- This time a new object called `t_test1` is created for the `response_time` data t-test
+
+```{r t-test response time, echo = T}
+
+t_test1 <- t_test_data %>%
+  select(-id, -likert_num) %>%  
+  group_by_at(vars(animacy)) %>%
+  mutate(id=1:n()) %>% 
+  ungroup() %>% 
+  spread(key = animacy, value = response_time) 
+
+
+```
+
+----
+
+- Then we pass this data to the t.test function and interpret the findings in the same way
+
+```{r}
+
+t.test(t_test1$non_animated, t_test1$animated)
+
+```
+
