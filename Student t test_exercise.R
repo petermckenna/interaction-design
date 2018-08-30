@@ -4,16 +4,20 @@
 
 # call in packages to R Studio
 
-library(readr) # reading in the data
-library(tidyr) # data wrangling
-library(dplyr) # data wrangling
+library(readr)   # reading in the data
+library(tidyr)   # data wrangling
+library(dplyr)   # data wrangling
 library(ggplot2) # plotting data
 
 #### Reading in data ----
 
+setwd("~/User files/Peter/Heriot-Watt University/R Statistics/HRI statistics course/HRI stats course/interaction-design")
+
+# going to retrieve the data from an online repository
+
 # read in the data using `readr` package
 
-t_test_data <- read_csv("t-test-data.csv")
+t_test_data <- read_csv("t-test-data.csv", col_names = TRUE)
 
 # examine the raw data
 

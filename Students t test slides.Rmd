@@ -14,7 +14,7 @@ pre {
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = F)
 
-
+setwd("~/User files/Peter/Heriot-Watt University/R Statistics/HRI statistics course/HRI stats course/interaction-design")
 
 ```
 
@@ -44,12 +44,25 @@ library(ggplot2)
 
 ## **Main verbs of R's Tidyverse**
 
-- `filter`: extract rows
-- `select`: extract columns 
-- `gather/spread`: gather columns into rows/spread rows into columns
-- `mutate`: compute and append new/existing columns
-- `summarise`: summarise data based on stated criteria
-- see online text "R for Data Science" for more info 
+- Here is a list of some of the functions we will be using today.
+- The code is ready for you to use, so use these as a reference point in the proceeding slides
+
+>- `filter`: extract rows
+>- `select`: extract columns 
+>- `gather/spread`: gather columns into rows/spread rows into columns
+>- `mutate`: compute and append new/existing columns
+>- `summarise`: summarise data based on stated criteria
+>- see online text "R for Data Science" for more info 
+
+## Retrieving the data
+
+- the data and code you need for today can be found here
+
+https://github.com/petermckenna/interaction-design
+
+- on this page click **Clone or download** --> **Download ZIP**
+
+- Save the Zip folder in your user directory, e.g. 
 
 
 ## **Reading in the data**
@@ -71,29 +84,33 @@ t_test_data <- read_csv("t-test-data.csv")
 - Do do this you can clik on the `t_test_data` object created in the global environment (panel in top right)
 - or we can use the `head` command to examine first 6 rows of the data 
 
+
+---
+
 ```{r viewing the data, echo = T}
 
 head(t_test_data)
 
 ```
 
+
 ## **Description of the data** {.smaller}
 
 > - The data examines 60 participants Likert rating and response time of animated v non-animated robot
 > - Each row represent a different participant responses, so there are 60 rows 
-> - *id* vector = participant number
-> - *Likert_rating* vector = participants evaluation of the inteaction from 1 (Not very friendly) to 5 (very friendly)
-> - *animacy* vector = condition with two levels (animated, non-animated)
-> - in the animated conditon the robot tracks participant's heads and gestures in communication
-> - in the non-animated condition the robot is static
-> - *response_time* vector = the time (seconds) it took for participants to indicate how friendly they thought the robot was on the Likert scale
+> - `id` = participant number
+> - `Likert_rating` = participants evaluation of the inteaction from 1 (Not very friendly) to 5 (very friendly)
+> - `animacy` = condition with two levels (animated, non-animated)
+  > - in the **animated** conditon the robot tracks participant's heads and gestures in communication
+  > - in the **non-animated** condition the robot is static
+> - `response_time` vector = the time (seconds) it took for participants to indicate how friendly they thought the robot was on the Likert scale
 > - the experiment (user study) is between-subjects; 
 > - i.e., one set of paticipants interact with the animated robot, and a separate group interact with the non-animated robot
 
 
-## Generating descriptve statistics 
+## **Generating descriptve statistics** 
 
-- to generate a general summary the data we use the `summary` command
+- To generate a summary the data we use the `summary` command
 
 ```{r summarising data, echo = T}  
 
@@ -101,18 +118,18 @@ summary(t_test_data)
 
 ```
 
-- as you can see, summary has generated the min, max, median, IQR and mean for our outcome vectors `likert_num` and `response_time` 
+- as you can see, `summary` has generated the min, max, median, and mean for our outcome vectors `likert_num` and `response_time` 
 
 
 
-## Generating descriptve statistics | Between group summaries: part 1 
+## **Generating descriptve statistics | Between group summaries: part 1**
 
-> - We are interested in differences between the participants who interacted with the `animated` and the `non_animated` robot
-> - So, we generate summaries the outcome variables (`likert_num`, `response_time`) by group (`animated`, `non_animated`) 
+> - We are interested in differences between the participants who interacted with the **animated** and the **non_animated** robot
+> - So, we generate summaries the outcome variables (`likert_num`, `response_time`) by group (**animated**, **non_animated**) 
 > - The following syntax generated the mean and standard deviation for each combination of group and outcome variable 
 
 
-## Generating descriptve statistics | Between group summaries: part 2
+## **Generating descriptve statistics | Between group summaries: part 2**
 
 ```{r summarising by group, echo = T}
 
@@ -125,20 +142,98 @@ t_test_data %>%
 
 ```
 
-## Generating descriptve statistics | Between group summaries: part 3
+## **Generating descriptve statistics | Between group summaries: part 3**
 
-- As you can see, particpants in the `animated` robot group rated the robot as more friednly (M = 4.13, SD = 0.86) compared to participants in the `non-animated` robot group (M = 2.77, 1.01).  
-- Also, particpants in the `animated` robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) 
-- compared to participants in the `non-animated` robot group (M = 3.46, 1.03). 
-
-
-## Checking for normality
-
-- Deciding what statistical test to use depends on the distribution of the data
-- Here is the basic rule of thumb: a bell-shaped = normally distributed (known as *parametic*)
-- non-bell shaped (skewed) data is non-parametric.
-- For continuous data (e.g. interval, ratio scale) we plot a hisogram to
-- check shape of distribution
+- As you can see, particpants in the **animated** robot group rated the robot as more friednly (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01).  
+- Also, particpants in the **animated** robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) compared to participants in the **non-animated** robot group (M = 3.46, 1.03). 
 
 
+## **Checking for normality**
 
+>- Deciding what statistical test to use depends on the distribution of the data
+>- Here is the basic rule of thumb: a bell-shaped = normally distributed (known as *parametic*)
+>- non-bell shaped (skewed) data is non-parametric.
+>- For continuous data (e.g. interval, ratio scale) we plot a hisogram to check shape of distribution
+
+## **A parametric distribution**
+
+- This is what is known as a **Gaussian** (or parametric) distribution
+- You can see why it is referred to as bell-shaped
+
+```{r plot of normal distribution, echo = F}
+
+x <- seq(5,15,length=1000)
+y <- dnorm(x,mean=10, sd=3)
+plot(x,y, type="l", lwd=1)
+
+```
+
+## **A non-parametric distribution**
+
+- And this is what a non-paramettric distribution looks like
+- Notice that the area under the line is not symmetrical: an indication that the data is non-parametric
+
+```{r plot of non-normal distribution, echo = F, warning=F}
+
+n <- 2000
+k <- seq(0, n, by = 20)
+plot (k, dbinom(k, n, pi/10, log = TRUE), type = "l", ylab = "log density")
+
+
+```
+
+
+## **Check distribution of resp_time data part 1**
+
+- Distribution of non-animated robot data
+
+```{r normality check pt1, echo = T, eval = F}
+
+t_test_data %>%
+  filter(animacy == "non_animated") %>%
+  ggplot(.) +
+  geom_histogram(mapping = aes(x = response_time),
+                 bins = 20)
+
+
+```
+
+----
+
+```{r normality check pt2, echo = F}
+
+t_test_data %>%
+  filter(animacy == "non_animated") %>%
+  ggplot(.) +
+  geom_histogram(mapping = aes(x = response_time),
+                 bins = 20)
+
+
+```
+
+
+## **Check distribution of resp_time data part 2**
+
+- Distribution of animated robot data
+
+```{r normality check pt3, echo = T, eval = F, warning = F}
+
+t_test_data %>%
+  filter(animacy == "animated") %>%
+  ggplot(.) +
+  geom_histogram(mapping = aes(x = response_time),
+                 bins = 20)
+
+```
+
+----
+
+```{r normality check pt4, echo = F, warning = F}
+
+t_test_data %>%
+  filter(animacy == "animated") %>%
+  ggplot(.) +
+  geom_histogram(mapping = aes(x = response_time),
+                 bins = 20)
+
+```
