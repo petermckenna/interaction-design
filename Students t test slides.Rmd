@@ -5,11 +5,6 @@ date: "22 August 2018"
 output: ioslides_presentation
 ---
 
-<style>
-pre {
-  font-size: 16px;
-}
-</style>
 
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = F)
@@ -247,7 +242,7 @@ t_test_data %>%
 
 - Distribution of animated robot data
 
-```{r normality check pt3, echo = T, eval = F, warning = F}
+```{r normality check pt3, echo = T, eval = F, warning = F, message = F}
 
 t_test_data %>%
   filter(animacy == "animated") %>%
@@ -259,7 +254,7 @@ t_test_data %>%
 
 ----
 
-```{r normality check pt4, echo = F, warning = F}
+```{r normality check pt4, echo = F, warning = F, message = F}
 
 t_test_data %>%
   filter(animacy == "animated") %>%
