@@ -1,0 +1,144 @@
+---
+title: 'Comparing the diferrence between two means: Student''s t-test'
+author: "Dr. Peter McKenna"
+date: "22 August 2018"
+output: ioslides_presentation
+---
+
+<style>
+pre {
+  font-size: 16px;
+}
+</style>
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = F)
+
+
+
+```
+
+
+## **Introduction**
+
+> - In this class you are going to learn how to perform a t-test using R Studio
+> - A t-test is a statistical test that tests whether the difference between to sample means is significantly differnt
+> - This test is often used in human-robot and human-computer studies
+> - You may need to use this test on your own data for your 4th year project
+
+## **Loading the necessary packages**
+
+- To begin, we must first load a set of packages that will allow us to wrangle (i.e. tidy, sort), explore, and analyse the data
+- To do this we need to load the `dplyr`, `tidyr`, `readr`, and `ggplot2` packages with the following syntax
+
+```{r loading packages, echo = T, warning = F, message = F}
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+```
+
+- do not be concerned by the text that is generated in the console; R packages are stamped to certain versions of R Studio, but work fine once loaded
+
+## **Main verbs of R's Tidyverse**
+
+- `filter`: extract rows
+- `select`: extract columns 
+- `gather/spread`: gather columns into rows/spread rows into columns
+- `mutate`: compute and append new/existing columns
+- `summarise`: summarise data based on stated criteria
+- see online text "R for Data Science" for more info 
+
+
+## **Reading in the data**
+
+- We then read in the data (a .csv file) useing the following command
+
+```{r reading in the data, echo=TRUE, warning = F, message = F}
+
+t_test_data <- read_csv("t-test-data.csv")
+
+```
+
+- this syntax creates an object called `t_test_data` from an existing .csv data file
+
+
+## **Viewing the data**
+
+- Let's have a look at the data
+- Do do this you can clik on the `t_test_data` object created in the global environment (panel in top right)
+- or we can use the `head` command to examine first 6 rows of the data 
+
+```{r viewing the data, echo = T}
+
+head(t_test_data)
+
+```
+
+## **Description of the data** {.smaller}
+
+> - The data examines 60 participants Likert rating and response time of animated v non-animated robot
+> - Each row represent a different participant responses, so there are 60 rows 
+> - *id* vector = participant number
+> - *Likert_rating* vector = participants evaluation of the inteaction from 1 (Not very friendly) to 5 (very friendly)
+> - *animacy* vector = condition with two levels (animated, non-animated)
+> - in the animated conditon the robot tracks participant's heads and gestures in communication
+> - in the non-animated condition the robot is static
+> - *response_time* vector = the time (seconds) it took for participants to indicate how friendly they thought the robot was on the Likert scale
+> - the experiment (user study) is between-subjects; 
+> - i.e., one set of paticipants interact with the animated robot, and a separate group interact with the non-animated robot
+
+
+## Generating descriptve statistics 
+
+- to generate a general summary the data we use the `summary` command
+
+```{r summarising data, echo = T}  
+
+summary(t_test_data)
+
+```
+
+- as you can see, summary has generated the min, max, median, IQR and mean for our outcome vectors `likert_num` and `response_time` 
+
+
+
+## Generating descriptve statistics | Between group summaries: part 1 
+
+> - We are interested in differences between the participants who interacted with the `animated` and the `non_animated` robot
+> - So, we generate summaries the outcome variables (`likert_num`, `response_time`) by group (`animated`, `non_animated`) 
+> - The following syntax generated the mean and standard deviation for each combination of group and outcome variable 
+
+
+## Generating descriptve statistics | Between group summaries: part 2
+
+```{r summarising by group, echo = T}
+
+t_test_data %>%
+  group_by(animacy) %>%                     
+  summarise(avg_rating = mean(likert_num),  
+            sd_rating = sd(likert_num),
+            avg_rt = mean(response_time),
+            sd_rt = sd(response_time))
+
+```
+
+## Generating descriptve statistics | Between group summaries: part 3
+
+- As you can see, particpants in the `animated` robot group rated the robot as more friednly (M = 4.13, SD = 0.86) compared to participants in the `non-animated` robot group (M = 2.77, 1.01).  
+- Also, particpants in the `animated` robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) 
+- compared to participants in the `non-animated` robot group (M = 3.46, 1.03). 
+
+
+## Checking for normality
+
+- Deciding what statistical test to use depends on the distribution of the data
+- Here is the basic rule of thumb: a bell-shaped = normally distributed (known as *parametic*)
+- non-bell shaped (skewed) data is non-parametric.
+- For continuous data (e.g. interval, ratio scale) we plot a hisogram to
+- check shape of distribution
+
+
+
