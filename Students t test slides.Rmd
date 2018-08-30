@@ -264,7 +264,7 @@ t_test_data %>%
 
 ```
 
-# Checking for group (animated, non_animated) differences
+## **Checking for group (animated, non_animated) differences**
 
 
 - A usful way to check the differnce in scores between groups is to generate a boxplot
@@ -273,7 +273,7 @@ t_test_data %>%
 - First we'll look at `response_time` then `likert_num`
 
 
-# **Response Time(sec) between groups**
+## **Response Time(sec) between groups**
 
 ```{r checking group differences in rt with boxplot, echo = T}
 
@@ -287,7 +287,7 @@ t_test_data %>%
 - in a boxplot the bold lines in the box show the median
 - There is a big difference between the medians of the two groups and their response time (sec)
 
-# **Rating of robot's friendliness between groups**
+## **Rating of robot's friendliness between groups**
 
 ```{r checking group differences in likert with boxplot, echo = T}
 
@@ -308,7 +308,7 @@ t %>%
 
 ```
 
-# **Performing a t-test | pt 1 likert data**
+## **Performing a t-test | pt 1 likert data**
 
 >- Now we can check if our groups differ significantly in terms of how friednly they rated the robot (**likert_num**) and their response time (**response_time**)
 >- We'll start with the Likert data
@@ -341,7 +341,7 @@ t.test(t_test$non_animated, t_test$animated)
 >- Note: if want paired samples t-test add `paired=FALSE`, e.g. t.test(t_test$non_animated, t_test$animated, paired = FALSE) 
 
 
-# **Interpreting the output**
+## **Interpreting the output**
 
 - Your interested in the 3rd line of output ( the one beginning with *t*)
 - t = -5.6539, df = 56.632, p-value = 5.357e-07
@@ -350,7 +350,7 @@ t.test(t_test$non_animated, t_test$animated)
 - So you can conclude that particpants in the **animated** robot group rated the robot as significantly friendlier (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01), *t* = -5.6539, df = 56.632, *p* < 0.001. 
 
 
-# **Performing a t-test | pt 2 response time data**
+## **Performing a t-test | pt 2 response time data**
 
 - This time a new object called `t_test1` is created for the `response_time` data t-test
 

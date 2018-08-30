@@ -234,3 +234,5 @@ t.test(t_test1$non_animated, t_test1$animated)
 # Frank start making material in August
 # have materials ready by end of August
 # sned on RMarkdown slides to Frank
+# add data for non-sig effect
+# long RT and favourable 
