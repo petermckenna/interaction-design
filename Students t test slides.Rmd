@@ -26,9 +26,12 @@ setwd("~/User files/Peter/Heriot-Watt University/R Statistics/HRI statistics cou
 > - This test is often used in human-robot and human-computer studies
 > - You may need to use this test on your own data for your 4th year project
 
+
+
 ## **Loading the necessary packages**
 
-- To begin, we must first load a set of packages that will allow us to wrangle (i.e. tidy, sort), explore, and analyse the data
+- First, open R Studio
+- To begin, we must load a set of packages that will allow us to wrangle (i.e. tidy, sort), explore, and analyse the data
 - To do this we need to load the `dplyr`, `tidyr`, `readr`, and `ggplot2` packages with the following syntax
 
 ```{r loading packages, echo = T, warning = F, message = F}
@@ -42,6 +45,8 @@ library(ggplot2)
 
 - do not be concerned by the text that is generated in the console; R packages are stamped to certain versions of R Studio, but work fine once loaded
 
+
+
 ## **Main verbs of R's Tidyverse**
 
 - Here is a list of some of the functions we will be using today.
@@ -54,6 +59,8 @@ library(ggplot2)
 >- `summarise`: summarise data based on stated criteria
 >- see online text "R for Data Science" for more info 
 
+
+
 ## Retrieving the data
 
 - the data and code you need for today can be found here
@@ -62,7 +69,31 @@ https://github.com/petermckenna/interaction-design
 
 - on this page click **Clone or download** --> **Download ZIP**
 
-- Save the Zip folder in your user directory, e.g. 
+- Save the Zip folder in your user directory, e.g. C/Users/xm42/University/Interaction Design. You may need to copy it from your *Downloads* folder
+
+- Save the folder where you keep your other **Interaction Design** materials
+
+
+
+## Setting up a working directory pt 1
+
+- to set up the directory locate the Interaction Design Zip folder by...
+
+>- Going to R Studio and clicking the **Files** tab on the right panel
+
+>- Click the 3 dots **...** below the refresh synbol
+
+>- Locate the Zip folder and click **OK**
+
+>- Click the **More** option to the left of the **...** button and select **Set as Working Directory**
+
+
+
+## Setting up a working directory pt 2
+
+- Alternatively, enter the directory manually using the command `setwd` and quoting the file path, e.g.
+
+`setwd("C/Users/xm42/University/Interaction Design")`
 
 
 ## **Reading in the data**
