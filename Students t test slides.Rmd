@@ -1,5 +1,5 @@
 ---
-title: 'Comparing the diferrence between two means: Student''s t-test'
+title: 'Comparing the difference between two means: Student''s t-test'
 author: "Dr. Peter McKenna"
 date: "22 August 2018"
 output: ioslides_presentation
@@ -9,7 +9,7 @@ output: ioslides_presentation
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = F)
 
-setwd("~/User files/Peter/Heriot-Watt University/R Statistics/HRI statistics course/HRI stats course/interaction-design")
+setwd("~/R/teaching materials/interaction-design")
 
 ```
 
@@ -17,7 +17,7 @@ setwd("~/User files/Peter/Heriot-Watt University/R Statistics/HRI statistics cou
 ## **Introduction**
 
 > - In this class you are going to learn how to perform a t-test using R Studio
-> - A t-test is a statistical test that tests whether the difference between to sample means is significantly differnt
+> - A t-test is a statistical test that tests whether the difference between to sample means is significantly different
 > - This test is often used in human-robot and human-computer studies
 > - You may need to use this test on your own data for your 4th year project
 
@@ -52,7 +52,7 @@ library(ggplot2)
 >- `gather/spread`: gather columns into rows/spread rows into columns
 >- `mutate`: compute and append new/existing columns
 >- `summarise`: summarise data based on stated criteria
->- see online text "R for Data Science" for more info 
+>- see online text [R for Data Science](http://r4ds.had.co.nz/) for more info 
 
 
 
@@ -93,7 +93,7 @@ https://github.com/petermckenna/interaction-design
 
 ## **Reading in the data**
 
-- We then read in the data (a .csv file) useing the following command
+- We then read in the data (a .csv file) using the following command
 
 ```{r reading in the data, echo=TRUE, warning = F, message = F}
 
@@ -107,7 +107,7 @@ t_test_data <- read_csv("t-test-data.csv")
 ## **Viewing the data**
 
 - Let's have a look at the data
-- Do do this you can clik on the `t_test_data` object created in the global environment (panel in top right)
+- Do do this you can click on the `t_test_data` object created in the global environment (panel in top right)
 - or we can use the `head` command to examine first 6 rows of the data 
 
 
@@ -125,13 +125,13 @@ head(t_test_data)
 > - The data examines 60 participants Likert rating and response time of animated v non-animated robot
 > - Each row represent a different participant responses, so there are 60 rows 
 > - `id` = participant number
-> - `Likert_rating` = participants evaluation of the inteaction from 1 (Not very friendly) to 5 (very friendly)
+> - `Likert_rating` = participants evaluation of the interaction from 1 (Not very friendly) to 5 (very friendly)
 > - `animacy` = condition with two levels (animated, non-animated)
-  > - in the **animated** conditon the robot tracks participant's heads and gestures in communication
+  > - in the **animated** condition the robot tracks participant's heads and gestures in communication
   > - in the **non-animated** condition the robot is static
 > - `response_time` vector = the time (seconds) it took for participants to indicate how friendly they thought the robot was on the Likert scale
 > - the experiment (user study) is between-subjects; 
-> - i.e., one set of paticipants interact with the animated robot, and a separate group interact with the non-animated robot
+> - i.e., one set of participants interact with the animated robot, and a separate group interact with the non-animated robot
 
 
 ## **Generating descriptve statistics** 
@@ -170,8 +170,8 @@ t_test_data %>%
 
 ## **Generating descriptve statistics | Between group summaries: part 3**
 
-- As you can see, particpants in the **animated** robot group rated the robot as more friednly (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01).  
-- Also, particpants in the **animated** robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) compared to participants in the **non-animated** robot group (M = 3.46, 1.03). 
+- As you can see, participants in the **animated** robot group rated the robot as more friendly (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01).  
+- Also, participants in the **animated** robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) compared to participants in the **non-animated** robot group (M = 3.46, 1.03). 
 
 
 ## **Checking for normality**
@@ -179,7 +179,7 @@ t_test_data %>%
 >- Deciding what statistical test to use depends on the distribution of the data
 >- Here is the basic rule of thumb: a bell-shaped = normally distributed (known as *parametic*)
 >- non-bell shaped (skewed) data is non-parametric.
->- For continuous data (e.g. interval, ratio scale) we plot a hisogram to check shape of distribution
+>- For continuous data (e.g. interval, ratio scale) we plot a histogram to check shape of distribution
 
 ## **A parametric distribution**
 
@@ -196,7 +196,7 @@ plot(x,y, type="l", lwd=1)
 
 ## **A non-parametric distribution**
 
-- And this is what a non-paramettric distribution looks like
+- And this is what a non-parametric distribution looks like
 - Notice that the area under the line is not symmetrical: an indication that the data is non-parametric
 
 ```{r plot of non-normal distribution, echo = F, warning=F}
@@ -208,12 +208,27 @@ plot (k, dbinom(k, n, pi/10, log = TRUE), type = "l", ylab = "log density")
 
 ```
 
-
 ## **Check distribution of resp_time data part 1**
 
-- Distribution of non-animated robot data
+Let's check the distribution of our RT data using a histogram
 
 ```{r normality check pt1, echo = T, eval = F}
+
+t_test_data %>%
+  ggplot(.) +
+  geom_histogram(mapping = aes(x = response_time),
+                 bins = 20)
+
+
+```
+
+
+## **Check distribution of resp_time data part 2**
+
+- We an use the `filter` verb to isolate elements of the data
+- Distribution of **non-animated** group's RT
+
+```{r normality check pt2, echo = T, eval = F}
 
 t_test_data %>%
   filter(animacy == "non_animated") %>%
@@ -226,7 +241,7 @@ t_test_data %>%
 
 ----
 
-```{r normality check pt2, echo = F}
+```{r normality check pt3, echo = F}
 
 t_test_data %>%
   filter(animacy == "non_animated") %>%
@@ -238,11 +253,11 @@ t_test_data %>%
 ```
 
 
-## **Check distribution of resp_time data part 2**
+## **Check distribution of resp_time data part 4**
 
 - Distribution of animated robot data
 
-```{r normality check pt3, echo = T, eval = F, warning = F, message = F}
+```{r normality check pt4, echo = T, eval = F, warning = F, message = F}
 
 t_test_data %>%
   filter(animacy == "animated") %>%
@@ -254,7 +269,7 @@ t_test_data %>%
 
 ----
 
-```{r normality check pt4, echo = F, warning = F, message = F}
+```{r normality check pt5, echo = F, warning = F, message = F}
 
 t_test_data %>%
   filter(animacy == "animated") %>%
@@ -267,9 +282,9 @@ t_test_data %>%
 ## **Checking for group (animated, non_animated) differences**
 
 
-- A usful way to check the differnce in scores between groups is to generate a boxplot
+- A useful way to check the difference in scores between groups is to generate a box plot
 - We use the `ggpot2` package to generate graphics
-- For a boxplot, the syntax is geom_boxplot
+- For a box plot, the syntax is geom_boxplot
 - First we'll look at `response_time` then `likert_num`
 
 
@@ -284,7 +299,7 @@ t_test_data %>%
 
 ```
 
-- in a boxplot the bold lines in the box show the median
+- in a box plot the bold lines in the box show the median
 - There is a big difference between the medians of the two groups and their response time (sec)
 
 ## **Rating of robot's friendliness between groups**
@@ -310,7 +325,7 @@ t %>%
 
 ## **Performing a t-test | pt 1 likert data**
 
->- Now we can check if our groups differ significantly in terms of how friednly they rated the robot (**likert_num**) and their response time (**response_time**)
+>- Now we can check if our groups differ significantly in terms of how friendly they rated the robot (**likert_num**) and their response time (**response_time**)
 >- We'll start with the Likert data
 >- The `t.test` will calculate this difference
 >- To pass data to `t.test` we need to remove `id` and `response_time` vectors to perform grouping, then add `id` again at the end
@@ -346,8 +361,8 @@ t.test(t_test$non_animated, t_test$animated)
 - Your interested in the 3rd line of output ( the one beginning with *t*)
 - t = -5.6539, df = 56.632, p-value = 5.357e-07
 - So, p < 0.001.
-- Convention holds that this is statisically significant
-- So you can conclude that particpants in the **animated** robot group rated the robot as significantly friendlier (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01), *t* = -5.6539, df = 56.632, *p* < 0.001. 
+- Convention holds that this is statistically significant
+- So you can conclude that participants in the **animated** robot group rated the robot as significantly friendlier (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01), *t* = -5.6539, df = 56.632, *p* < 0.001. 
 
 
 ## **Performing a t-test | pt 2 response time data**
