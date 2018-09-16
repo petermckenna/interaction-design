@@ -1,0 +1,347 @@
+---
+title: 'An introduction to R | A programming language and free software environment for statistical computing and graphics'
+author: "Dr. Peter McKenna"
+date: "22 August 2018"
+output: ioslides_presentation
+---
+
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = F)
+
+setwd("~/R/teaching materials/interaction-design")
+
+```
+
+
+## **Introduction**
+
+- In this introductory class you are going to learn how to:
+  >- read a .csv file into R Studio
+  >- wrangle and explore the data using Tidyverse methods
+  >- generate plots
+  >- perform a t-test
+
+## **Considerations**
+
+>- Today we are skimming the surface of R's functionality
+>- R has a steep learning curve relative to other high level stats packages (e.g. SPSS)
+>- You are going to make mistakes - a single letter out of place will cause errors. Take your time!
+>- Persistence is greatly rewarded in the long-term
+
+# **Quick peek at the user interface**
+
+
+## **Tidyverse packages**
+
+>- Today we are using *Tidyverse* methods to wrangle and analyse the data
+>- The Tidyverse is a set of R packages that allows for more user friendly programming, relative to what's called *base R*
+>- For more about the Tidyverse see Hadley Wickham's free online text [R for Data Science](http://r4ds.had.co.nz/) 
+>- Our first task is to install these packages and load them to R Studio 
+
+----
+
+>- `readr` - for reading in data
+>- `tidyr` - for tidying & wrangling data
+>- `dplyr` - for tidying & wrangling data
+>- `ggplot`- for plotting data
+
+
+## **Main verbs of R's Tidyverse**
+
+- These packages allow us to use Tidyverse verbs:
+
+>- `filter`: extract rows
+>- `select`: extract columns 
+>- `gather/spread`: gather columns into rows/spread rows into columns
+>- `mutate`: compute and append new/existing columns
+>- `summarise`: summarise data based on stated criteria
+
+
+----
+
+- You are going to see a lot of this symbol
+
+```{r piping, eval = F, echo = T}
+%>%
+```
+
+- This is the *pipe* operator
+- Do not fear the pipe operator
+- It means is "then do this"
+
+
+## Retrieving the data
+
+- the data and code you need for today can be found here
+
+https://github.com/petermckenna/interaction-design
+
+- on this page click **Clone or download** --> **Download ZIP**
+
+- Save the Zip folder in your user directory, e.g. C/Users/xm42/University/Interaction Design. You may need to copy it from your *Downloads* folder
+
+- Save the folder where you keep your other **Interaction Design** materials
+
+
+
+## Setting up a working directory pt 1
+
+- to set up the directory locate the Interaction Design Zip folder by...
+
+>- Going to R Studio and clicking the **Files** tab on the right panel
+
+>- Click the 3 dots **...** below the refresh symbol
+
+>- Locate the Zip folder and click **OK**
+
+>- Click the **More** option to the left of the **...** button and select **Set as Working Directory**
+
+
+
+## Setting up a working directory pt 2
+
+- Alternatively, enter the directory manually using the command `setwd` and quoting the file path, e.g.
+
+`setwd("C/Users/xm42/University/Interaction Design")`
+
+- Once complete you should see a list of files appear in the files tab (bottom right)
+- That means R Studio has access to the directory
+
+## **Start your own script**
+
+- You are now ready to start your own script
+- Scripts are edited in the *Workspace Tab* - above the R Console
+- Now your directory is set up the first task is to install and load the necessary packages
+
+
+## **Installing Packages**
+
+```{r loading packages, echo = T, eval = F, warning = F, message = F}
+
+install.packages('readr')   # installs the 'readr' package
+install.packages('tidyr')   # installs the 'tidyr' package
+install.packages('dplyr')   # installs the 'dplyr' package
+install.packages('ggplot2') # installs the 'ggplot2' package
+
+```
+
+- To execute code press `Ctrl + Enter`
+- Package installation take a minute
+
+## **Loading in the packages**
+
+```{r loading packages pt2, echo = T, warning = F, message = F}
+
+library(readr)   # load 'readr' package
+library(tidyr)   # load 'tidyr' package
+library(dplyr)   # load 'dplyr' package
+library(ggplot2) # load 'ggplot2' package
+
+```
+
+- do not be concerned by the text generated in the console; R packages are stamped to certain versions of R Studio, but work fine once loaded
+
+
+## **Reading in the data**
+
+- We then read in the data (a .csv file) using the following code
+
+```{r reading in the data, echo=TRUE, warning = F, message = F}
+
+t_test_data <- read_csv("t-test-data.csv")
+
+```
+
+>- this syntax creates an object called `t_test_data` from an existing .csv data file
+
+
+## **Viewing the data**
+
+- Let's have a look at the data
+- Do do this you can click on the `t_test_data` object created in the *Global Environment* (panel in top right)
+- We can use the `head` command to examine first 6 rows of the data as a sanity check 
+
+
+---
+
+```{r viewing the data, echo = T}
+
+head(t_test_data)
+
+```
+
+
+## **Description of the data**
+
+> - The data details 60 participants Likert rating and response time of animated v non-animated robot
+> - The data is in the *long format* where each row represents a unique observation; in this case, one per participant
+> - the experiment (or user study) is between-subjects
+
+----
+
+- `id` = participant number \
+
+- `Likert_rating` = participants evaluation of the interaction from 1 (Not very friendly) to 5 (very friendly) \
+
+- `animacy` = condition with two levels (animated, non-animated)
+  - in the **animated** condition the robot tracks participant's head and uses hand gestures in communication
+  - in the **non_animated** condition the robot is static \
+  
+- `response_time` vector = the time (seconds) it took for participants to indicate how friendly they thought the robot was on the Likert scale
+
+
+## **Generating descriptve statistics** 
+
+- To generate a summary the data we use the `summary` command
+
+```{r summarising data, echo = T}  
+
+summary(t_test_data)
+
+```
+
+- as you can see, `summary` has generated the min, max, median, and mean for our outcome vectors `likert_num` and `response_time` 
+
+
+
+## **Generating descriptve statistics | Between group summaries: part 1**
+
+>- We are interested in differences between the participants who interacted with the **animated** and the **non_animated** robot
+>- So, we generate summaries of the outcome variables (`likert_num`, `response_time`) by group (**animated**, **non_animated**)
+>- Remember, `%>%` means, "then do this"
+
+
+## **Generating descriptve statistics | Between group summaries: part 2**
+
+- The following syntax generated the mean and standard deviation for each combination of group and outcome variable 
+
+```{r summarising by group, echo = T}
+
+t_test_data %>%
+  group_by(animacy) %>%                     
+  summarise(avg_rating = mean(likert_num),  
+            sd_rating = sd(likert_num),
+            avg_rt = mean(response_time),
+            sd_rt = sd(response_time))
+
+```
+
+## **Generating descriptve statistics | Between group summaries: part 3**
+
+- As you can see, participants in the **animated** robot group rated the robot as more friendly (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01).  
+- Also, participants in the **animated** robot group took longer to respond to the Likert question on Friendliness (M = 5.06, SD = 1.06) compared to participants in the **non-animated** robot group (M = 3.46, 1.03). 
+
+
+## **Checking for group (animated, non_animated) differences**
+
+
+- A useful way to check the difference in scores between groups is to generate a box plot
+- We use the `ggpot2` package to generate graphics
+- For a box plot, the syntax is geom_boxplot
+- First we'll look at `response_time` then `likert_num`
+
+
+## **Response Time(sec) between groups**
+
+```{r checking group differences in rt with boxplot, echo = T}
+
+t_test_data %>%
+  ggplot(.) +
+  geom_boxplot(mapping = aes(x = animacy, y = response_time, fill = animacy)) + 
+  theme(legend.position = "none")
+
+```
+
+- in a box plot the bold lines in the box show the median
+- There is a big difference between the medians of the two groups and their response time (sec)
+
+## **Rating of robot's friendliness between groups**
+
+```{r checking group differences in likert with boxplot, echo = T}
+
+# first, make an object (here I've called it 't') that contains the means and sd of likert_num
+
+t <- t_test_data %>%
+  group_by(animacy) %>%                     
+  summarise(avg_rating = mean(likert_num),  
+            sd_rating = sd(likert_num))
+
+# then pass to ggplot2
+
+t %>%
+  ggplot(., aes(animacy, avg_rating, fill = animacy)) +
+  geom_bar(stat="identity") +
+  geom_errorbar(aes(ymin = avg_rating - sd_rating, ymax = avg_rating + sd_rating), width = .2)
+
+
+```
+
+## **Performing a t-test | pt 1 likert data**
+
+>- Now we can check if our groups differ significantly in terms of how friendly they rated the robot (**likert_num**) and their response time (**response_time**)
+>- We'll start with the Likert data
+>- The `t.test` will calculate this difference
+>- To pass data to `t.test` we need to remove `id` and `response_time` vectors to perform grouping, then add `id` again at the end
+
+----
+
+```{r t-test likert data, echo T }
+
+t_test <- t_test_data %>%
+  select(-id, -response_time) %>%  
+  group_by_at(vars(animacy)) %>%
+  mutate(id=1:n()) %>% 
+  ungroup() %>% 
+  spread(key = animacy, value = likert_num) 
+
+```
+
+----
+
+- This new object `t_test` can no be passed to the `t.test` function
+- We use the `$` to specify a vector from the object, in this case, our groups
+
+```{r t-test likert analysis, echo = T}
+
+t.test(t_test$non_animated, t_test$animated)
+
+```
+>- Note: if want paired samples t-test add `paired=FALSE`, e.g. t.test(t_test$non_animated, t_test$animated, paired = FALSE) 
+
+
+## **Interpreting the output**
+
+- Your interested in the 3rd line of output ( the one beginning with *t*)
+- t = -5.6539, df = 56.632, p-value = 5.357e-07
+- So, p < 0.001.
+- Convention holds that this is statistically significant
+- So you can conclude that participants in the **animated** robot group rated the robot as significantly friendlier (M = 4.13, SD = 0.86) compared to participants in the **non-animated** robot group (M = 2.77, 1.01), *t* = -5.6539, df = 56.632, *p* < 0.001. 
+
+
+## **Performing a t-test | pt 2 response time data**
+
+- This time a new object called `t_test1` is created for the `response_time` data t-test
+
+```{r t-test response time, echo = T}
+
+t_test1 <- t_test_data %>%
+  select(-id, -likert_num) %>%  
+  group_by_at(vars(animacy)) %>%
+  mutate(id=1:n()) %>% 
+  ungroup() %>% 
+  spread(key = animacy, value = response_time) 
+
+
+```
+
+----
+
+- Then we pass this data to the t.test function and interpret the findings in the same way
+
+```{r}
+
+t.test(t_test1$non_animated, t_test1$animated)
+
+```
+
