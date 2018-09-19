@@ -32,7 +32,7 @@ setwd("~/R/teaching materials/interaction-design")
 # **Quick peek at the user interface**
 
 
-## **Tidyverse packages**
+## **Tidyverse**
 
 >- Today we are using *Tidyverse* methods to wrangle and analyse the data
 >- The Tidyverse is a set of R packages that allows for more user friendly programming, relative to what's called *base R*
@@ -40,6 +40,8 @@ setwd("~/R/teaching materials/interaction-design")
 >- Our first task is to install these packages and load them to R Studio 
 
 ----
+
+## **Tidyverse packages**
 
 >- `readr` - for reading in data
 >- `tidyr` - for tidying & wrangling data
@@ -79,7 +81,7 @@ https://github.com/petermckenna/interaction-design
 
 - on this page click **Clone or download** --> **Download ZIP**
 
-- Save the Zip folder in your user directory, e.g. C/Users/xm42/University/Interaction Design. You may need to copy it from your *Downloads* folder
+- Save the Zip folder in your user directory, e.g. `C/Users/xm42/University/Psychology coursework/R demo`. You may need to copy it from your *Downloads* folder
 
 - Save the folder where you keep your other **Interaction Design** materials
 
@@ -112,6 +114,7 @@ https://github.com/petermckenna/interaction-design
 
 - You are now ready to start your own script
 - Scripts are edited in the *Workspace Tab* - above the R Console
+- Create script headings using `#` (called a "comment"; inactive code) 
 - Now your directory is set up the first task is to install and load the necessary packages
 
 
@@ -127,6 +130,7 @@ install.packages('ggplot2') # installs the 'ggplot2' package
 ```
 
 - To execute code press `Ctrl + Enter`
+- This can be done for single lines, or multiple lines by highlighting sections
 - Package installation take a minute
 
 ## **Loading in the packages**
@@ -153,7 +157,7 @@ t_test_data <- read_csv("t-test-data.csv")
 
 ```
 
->- this syntax creates an object called `t_test_data` from an existing .csv data file
+>- this syntax creates an object called `t_test_data` from an existing .csv data file 
 
 
 ## **Viewing the data**
@@ -212,7 +216,7 @@ summary(t_test_data)
 >- Remember, `%>%` means, "then do this"
 
 
-## **Generating descriptve statistics | Between group summaries: part 2**
+## **Generating descriptve statistics | Between group summaries: part 2**[.small]
 
 - The following syntax generated the mean and standard deviation for each combination of group and outcome variable 
 
@@ -237,14 +241,26 @@ t_test_data %>%
 
 
 - A useful way to check the difference in scores between groups is to generate a box plot
-- We use the `ggpot2` package to generate graphics
-- For a box plot, the syntax is geom_boxplot
+- We use the `ggplot2` package to generate graphics
+- Note, `ggplot2` uses `+` instead of `%>%` - programming can be fickle
 - First we'll look at `response_time` then `likert_num`
 
 
 ## **Response Time(sec) between groups**
 
-```{r checking group differences in rt with boxplot, echo = T}
+```{r checking group differences in rt with boxplot pt1, echo = T, eval = F}
+
+t_test_data %>%
+  ggplot(.) +
+  geom_boxplot(mapping = aes(x = animacy, y = response_time, fill = animacy)) + 
+  theme(legend.position = "none")
+
+```
+
+
+----
+
+```{r checking group differences in rt with boxplot pt2, echo = F, eval = T}
 
 t_test_data %>%
   ggplot(.) +
